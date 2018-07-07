@@ -15,6 +15,7 @@ public class MojangRequest {
 	
 	/**
 	 * @author Specifies
+	 * @version 1.0
 	 */
 	
 	private JSONParser parser = new JSONParser();
