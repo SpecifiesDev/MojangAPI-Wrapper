@@ -25,7 +25,6 @@ public class MojangRequest {
 	 * @return JSONID User's UniqueID.
 	 * @throws Exception
 	 */
-	
 	public String getUUID(String username) throws Exception{
 		
 		URL requestSite = new URL("https://api.mojang.com/users/profiles/minecraft/" + username);
@@ -210,10 +209,90 @@ public class MojangRequest {
 		return response.toString();
 	}
 	/**
+	 * @param query Get the status of a specific service
+	 * @return output Status of various Mojang services GREEN(no issues), YELLOW(some issues), RED (service unavailable)
+	 * @throws Exception
+	 */
+	public String getStatus(String query) throws Exception {
+		System.out.print(query + "\n");
+		String queryToLower = query.toLowerCase();
+		System.out.print("Return status of various Mojang services. Queries: minecraft, session, account, auth, skins, authserver, sessionserver, api, textures, mojang \n");
+		
+		URL requestSite = new URL("https://status.mojang.com/check");
+		HttpURLConnection con = (HttpURLConnection) requestSite.openConnection();
+		
+		//Request properties
+		con.setRequestMethod("GET");
+		
+		//Response code
+		int responseCode = con.getResponseCode();
+		System.out.print("The getStatus request returned the response code of: " + responseCode + "\n");
+		
+		//Read Data
+		//Read Data
+		BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream()));
+		String inputline;
+		StringBuffer response = new StringBuffer();
+		while((inputline = in.readLine()) !=null) {
+			response.append(inputline);
+		}
+		in.close();
+		
+		Object obj = parser.parse(response.toString());
+		JSONArray array = (JSONArray) obj;
+
+		String output = "";
+		switch(queryToLower) {
+		case "minecraft":
+			  Object index = array.get(0);
+			  JSONObject toParse = (JSONObject) index;
+			  output = (String) toParse.get("minecraft.net");
+			  System.out.print("The status of the service minecraft.net is: " + output);
+		case "session":
+			Object index1 = array.get(1);
+			JSONObject toParse1 = (JSONObject) index1;
+			output = (String) toParse1.get("session.minecraft.net");
+			System.out.print("The status of the service session.minecraft.net is: " + output);
+		case "account":
+			Object index2 = array.get(2);
+			JSONObject toParse2 = (JSONObject) index2;
+			output = (String) toParse2.get("account.mojang.com");
+			System.out.print("The status of the service account.mojang.com is: " + output);
+		case "authserver":
+			Object index3 = array.get(3);
+			JSONObject toParse3 = (JSONObject) index3;
+			output = (String) toParse3.get("authserver.mojang.com");
+			System.out.print("The status of the service authserver.mojang.com is: " + output);
+		case "sessionserver":
+			Object index4 = array.get(4);
+			JSONObject toParse4 = (JSONObject) index4;
+			output = (String) toParse4.get("sessionserver.mojang.com");
+			System.out.print("The status of the service sessionserver.mojang.com is: " + output);
+		case "api":
+			Object index5 = array.get(5);
+			JSONObject toParse5 = (JSONObject) index5;
+			output = (String) toParse5.get("api.mojang.com");
+			System.out.print("The status of the service api.mojang.com is: " + output);
+		case "textures":
+			Object index6 = array.get(6);
+			JSONObject toParse6 = (JSONObject) index6;
+			output = (String) toParse6.get("textures.minecraft.net");
+			System.out.print("The status of the service textures.minecraft.net is: " + output);
+		case "mojang":
+			Object index7 = array.get(7);
+			JSONObject toParse7 = (JSONObject) index7;
+			output = (String) toParse7.get("mojang.com");
+			System.out.print("The status of the service mojang.com is: " + output);
+		}
+		
+		return output;
+	}
+	
+	/**
 	 * @param toDecode Base64 charset to decode
 	 * @return output Decoded Base64 string
 	 */
-	public String decodeBase64(String toDecode) {
+	private String decodeBase64(String toDecode) {
 		byte[] decodedString = Base64.getMimeDecoder().decode(toDecode);
 		String output = new String(decodedString);
 		return output;
@@ -223,7 +302,7 @@ public class MojangRequest {
 	 * @param UniqueID UniqueID to strip
 	 * @return id UniqueID stripped of '-'
 	 */
-	public String stripUUID(String UniqueID) {
+	private String stripUUID(String UniqueID) {
 		return UniqueID.replace("-", "");
 	}
 	
