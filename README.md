@@ -47,4 +47,11 @@ public static void main(String[] args) throws Exception{
     * Response code
     * An ArrayList that returns 40 character hashes of servers Mojang has blocked due to EULA violation
     */
+    //Get the status of a minecraft service
+    System.out.print(requests.getStatus("minecraft"));
+    /*
+    * Output:
+    * Response code, Status of the service
+    * Available queries: minecraft, session, account, auth, skins, authserver, sessionserver, api, textures, mojang.
+    */
 ```
