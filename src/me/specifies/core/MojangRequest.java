@@ -13,7 +13,18 @@ import org.json.simple.parser.JSONParser;
 
 public class MojangRequest {
 	
+	/**
+	 * @author Specifies
+	 */
+	
 	private JSONParser parser = new JSONParser();
+	
+	/**
+	 * 
+	 * @param username User to make the GET request with.
+	 * @return JSONID User's UniqueID.
+	 * @throws Exception
+	 */
 	
 	public String getUUID(String username) throws Exception{
 		
@@ -44,6 +55,11 @@ public class MojangRequest {
 		return (String) getIdJson.get("id");
 		
 	}
+	/**
+	 * @param UniqueID Player's UniqueID
+	 * @return response A json string that can then be parsed for its data
+	 * @throws Exception
+	 */
 	public String nameHistory(String UniqueID) throws Exception{
 		//Strip the UUID from any dashes, as Mojang's API requires
 		String uuid = stripUUID(UniqueID);
@@ -69,6 +85,11 @@ public class MojangRequest {
 		
 		return response.toString();
 	}
+	/**
+	 * @param UniqueID Player's UniqueID
+	 * @return skinURL Link to the Player's skin
+	 * @throws Exception
+	 */
 	public String getSkin(String UniqueID) throws Exception{
 		String uuid = stripUUID(UniqueID);
 		
@@ -115,6 +136,10 @@ public class MojangRequest {
 	
 		return (String) getURL.get("url");
 	}
+	/**
+	 * @return ArrayList List of hashes of servers Mojang has blocked due to violation of EULA
+	 * @throws Exception
+	 */
 	public ArrayList<String> getBlockedServerHashes() throws Exception{
 		
 		URL requestSite = new URL("https://sessionserver.mojang.com/blockedservers");
@@ -154,7 +179,12 @@ public class MojangRequest {
 		
 		return appendHashes;
 	}
-	
+	/**
+	 * @param userName Username to reference
+	 * @param timestamp Timestamp to which it was owned or changed
+	 * @return response A json string that can then be parsed for data
+	 * @throws Exception
+	 */
 	public String getOriginalUser(String userName, String timestamp) throws Exception{
 		//https://api.mojang.com/users/profiles/minecraft/<username>?at=<timestamp>
 		URL requestSite = new URL("https://api.mojang.com/users/profiles/minecraft/" + userName + "?at=" + timestamp);
@@ -179,13 +209,20 @@ public class MojangRequest {
 		in.close();
 		return response.toString();
 	}
-	
+	/**
+	 * @param toDecode Base64 charset to decode
+	 * @return output Decoded Base64 string
+	 */
 	public String decodeBase64(String toDecode) {
 		byte[] decodedString = Base64.getMimeDecoder().decode(toDecode);
 		String output = new String(decodedString);
 		return output;
 	}
-	
+	/**
+	 * StripUUID is to strip a player's UUID of '-', because Mojang's API requires it to be that way.
+	 * @param UniqueID UniqueID to strip
+	 * @return id UniqueID stripped of '-'
+	 */
 	public String stripUUID(String UniqueID) {
 		return UniqueID.replace("-", "");
 	}
