@@ -29,7 +29,7 @@ public static void main(String[] args) throws Exception{
     * JSON String that can be parsed, for the sake of explaining this method I provide a parsed example.
     * ID: ea1405e1bb7c41baba34f11a78fc4718
     * Name: Odoxxy
-    * This means, that the original account owner of "Specifies(At timestamp of 2)" now has the name "Odoxxy"
+    * This means, that the original account owner of "Specifies(At timestamp of 1)" now has the name "Odoxxy"
     */
     //Get skin method
     System.out.print(requests.getSkin("361dda429c1743fabb2149c60cf75d94"));
@@ -45,6 +45,6 @@ public static void main(String[] args) throws Exception{
     /*
     * Output:
     * Response code
-    * An ArrayList that returns 40 character hashes that Mojang has blocked due to EULA violation
+    * An ArrayList that returns 40 character hashes of servers Mojang has blocked due to EULA violation
     */
 ```
