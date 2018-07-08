@@ -6,6 +6,7 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Base64;
+import java.util.logging.Logger;
 
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -15,10 +16,14 @@ public class MojangRequest {
 	
 	/**
 	 * @author Specifies
-	 * @version 1.0
 	 */
 	
 	private JSONParser parser = new JSONParser();
+	private Logger log = Logger.getLogger("Warning");
+	
+	public  void main(String[] args) throws Exception{
+		getUUID("dalsdalsdalsd");
+	}
 	
 	/**
 	 * 
@@ -27,7 +32,6 @@ public class MojangRequest {
 	 * @throws Exception
 	 */
 	public String getUUID(String username) throws Exception{
-		
 		URL requestSite = new URL("https://api.mojang.com/users/profiles/minecraft/" + username);
 		HttpURLConnection con = (HttpURLConnection) requestSite.openConnection();
 		
@@ -49,11 +53,15 @@ public class MojangRequest {
 			response.append(inputLine);
 		}
 		in.close();
-		
+		if(responseCode == 204) {
+			log.warning("It appears that there was an error in appending the data. \n         It appears the inputted player has never registered.");
+			return null;
+		} else {
 		Object getId = parser.parse(response.toString());
 		JSONObject getIdJson = (JSONObject) getId;
-		return (String) getIdJson.get("id");
-		
+		String JSONID = (String) getIdJson.get("id");
+		return JSONID;
+		}
 	}
 	/**
 	 * @param UniqueID Player's UniqueID
@@ -82,6 +90,9 @@ public class MojangRequest {
 			response.append(inputline);
 		}
 		in.close();
+		if(responseCode == 204) {
+			log.warning("It appears the inserted UUID has never registered with Mojang, or there was an error. \n");
+		}
 		
 		return response.toString();
 	}
@@ -133,8 +144,12 @@ public class MojangRequest {
 		JSONObject grabSkinProperties = (JSONObject) textureValues;
 		Object textureValues2 = (Object) grabSkinProperties.get("SKIN");
 		JSONObject getURL = (JSONObject) textureValues2;
-	
-		return (String) getURL.get("url");
+		
+		if(responseCode == 204) {
+			log.warning("It appears the inserted UUID has never registered or there was an error in the request.");
+		}
+		String skinURL = (String) getURL.get("url");
+		return skinURL;
 	}
 	/**
 	 * @return ArrayList List of hashes of servers Mojang has blocked due to violation of EULA
@@ -207,6 +222,11 @@ public class MojangRequest {
 			response.append(inputline);
 		}
 		in.close();
+		
+		if(responseCode == 204) {
+			log.warning("It appears that either: the inserted username is invalid, the username has never been changed, or there was an error within the request. \n");
+		}
+		
 		return response.toString();
 	}
 	/**
@@ -241,7 +261,7 @@ public class MojangRequest {
 		
 		Object obj = parser.parse(response.toString());
 		JSONArray array = (JSONArray) obj;
-
+		
 		String output = "";
 		switch(queryToLower) {
 		case "minecraft":
@@ -285,7 +305,9 @@ public class MojangRequest {
 			output = (String) toParse7.get("mojang.com");
 			System.out.print("The status of the service mojang.com is: " + output);
 		}
-		
+		if(output == null || output == "") {
+			log.warning("It appears there was a problem with outputting the data requested.");
+		}
 		return output;
 	}
 	
