@@ -21,10 +21,6 @@ public class MojangRequest {
 	private JSONParser parser = new JSONParser();
 	private Logger log = Logger.getLogger("Warning");
 	
-	public  void main(String[] args) throws Exception{
-		getUUID("dalsdalsdalsd");
-	}
-	
 	/**
 	 * 
 	 * @param username User to make the GET request with.
